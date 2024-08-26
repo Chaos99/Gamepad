@@ -1,9 +1,9 @@
 :repository-owner: arduino-libraries
-:repository-name: Joystick
+:repository-name: Gamepad
 
 = {repository-name} Library for Arduino (RP2040 based boards) =
 
-This library allows an RaspberryPi RP2040 board to act as a Joystick when
+This library allows an RaspberryPi RP2040 board to act as a Gamepad when
 Earle F. Philhower`s [arduino-pico](https://github.com/earlephilhower/arduino-pico)
 Core is used.
 
@@ -11,7 +11,8 @@ Core is used.
 
 * [arduino-pico](https://github.com/earlephilhower/arduino-pico) Earle F. Philhower providing the Arduino Core, on which this library is based on, available under LGPL.
 * [tinyUSB] (https://github.com/hathach/tinyusb) Ha Thach for providing tinyUSB under MIT license, which covers most of the USB functionality.
-
+* [earlephilhower/joystick] (https://github.com/earlephilhower/Joystick) Earle F. Philhower original Joystick library was base for this adaptation
+* [benjaminaigner/joystick] (https://github.com/benjaminaigner/Joystick) Benjamin Aigner for the base version Earl F. Philhower forked from
 
 == License ==
 
