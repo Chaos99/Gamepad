@@ -1,12 +1,12 @@
 #######################################
-# Syntax Coloring Map For Joystick
+# Syntax Coloring Map For Gamepad
 #######################################
 
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
 
-Joystick	KEYWORD1
+Gamepad	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -15,17 +15,17 @@ Joystick	KEYWORD1
 begin		KEYWORD2
 end			KEYWORD2
 use8bit		KEYWORD2
-X			KEYWORD2
-Y			KEYWORD2
+LX			KEYWORD2
+LY			KEYWORD2
 button		KEYWORD2
 setButton	KEYWORD2
-position	KEYWORD2
-Z			KEYWORD2
-Zrotate		KEYWORD2
-sliderLeft	KEYWORD2
-slider		KEYWORD2
-sliderRight	KEYWORD2
-hat			KEYWORD2
+positionLeft	KEYWORD2
+positionRight	KEYWORD2
+RX			KEYWORD2
+RY		KEYWORD2
+triggerLeft	KEYWORD2
+triggerRight	KEYWORD2
+dpad			KEYWORD2
 useManualSend KEYWORD2
 send_now	KEYWORD2
 
