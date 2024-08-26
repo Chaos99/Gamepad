@@ -1,14 +1,14 @@
-# Joystick library
+# Gamepad library
 
-The Joystick functions enable a RP2040 board to act as a HID game controller.
+The Gamepad functions enable a RP2040 board to act as a HID game controller.
 
 To use this library:
 
 ```
-#include <Joystick.h>
+#include <Gamepad.h>
 ```
 
 
 ## Examples
 
-* [Joystick-AllFunctions] Includes example calls for each Joystick function
+* [Gamepad-AllFunctions] Includes example calls for each Joystick function
