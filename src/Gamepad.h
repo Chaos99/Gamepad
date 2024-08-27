@@ -1,5 +1,5 @@
 /*
-  Joystick.h
+  Gamepad.h
 
   Copyright (c) 2022, Benjamin Aigner <beni@asterics-foundation.org>
 
@@ -18,14 +18,14 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#ifndef _JOYSTICK_h
-#define _JOYSTICK_h
+#ifndef _GAMEPAD_h
+#define _GAMEPAD_h
 
 #include <Arduino.h>
 #include "class/hid/hid.h"
 
 //======================================================================
-class Joystick_
+class Gamepad_
 {
 private:
   bool _autosend;
@@ -33,7 +33,7 @@ private:
   hid_gamepad_report_t data;
   int map8or10bit(int const value);
 public:
-  Joystick_(void);
+  Gamepad_(void);
   void begin(void);
   void end(void);
   
@@ -63,7 +63,7 @@ public:
   //immediately send an HID report
   void send_now(void);
   //define the mapping of axes values
-  //default: axes methods are accepting values from 0-1023 (compatibility to other Joystick libraries)
+  //default: axes methods are accepting values from 0-1023 (compatibility to other Gamepad libraries)
   // and are mapped internally to int8_t
   //if use8bit(true) is called, -127 to 127 values are used.
   void use8bit(bool mode);
@@ -71,6 +71,6 @@ public:
   //get the gamepad report which is sent last.
   void getReport(hid_gamepad_report_t *report);
 };
-extern Joystick_ Joystick;
+extern Gamepad_ Gamepad;
 
-#endif /* _JOYSTICK_h */
+#endif /* _Gamepad_h */

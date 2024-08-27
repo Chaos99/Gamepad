@@ -1,10 +1,10 @@
 /*
-  Joystick.cpp
+  Gamepad.cpp
 
   Copyright (c) 2022, Benjamin Aigner <beni@asterics-foundation.org>
   Implementation loosely based on:
   * Mouse library from https://github.com/earlephilhower/arduino-pico
-  * Joystick functions from Teensyduino https://github.com/PaulStoffregen
+  * Gamepad functions from Teensyduino https://github.com/PaulStoffregen
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -21,7 +21,7 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "Joystick.h"
+#include "Gamepad.h"
 #include "Arduino.h"
 #include <RP2040USB.h>
 
@@ -29,13 +29,13 @@
 #include "class/hid/hid_device.h"
 
 // Weak function override to add our descriptor to the TinyUSB list
-void __USBInstallJoystick() { /* noop */ }
+void __USBInstallGamepad() { /* noop */ }
 
 //================================================================================
 //================================================================================
-//	Joystick/Gamepad
+//	Gamepad/Gamepad
 
-Joystick_::Joystick_(void)
+Gamepad_::Gamepad_(void)
 {
     _use8bit = false;
     _autosend = true;
@@ -44,16 +44,16 @@ Joystick_::Joystick_(void)
 }
 
 /** define the mapping of axes values
-  default: axes methods are accepting values from 0-1023 (compatibility to other Joystick libraries)
+  default: axes methods are accepting values from 0-1023 (compatibility to other Gamepad libraries)
 		and are mapped internally to int8_t
   if use8bit(true) is called, -127 to 127 values are used.*/
-void Joystick_::use8bit(bool mode)
+void Gamepad_::use8bit(bool mode)
 {
 	_use8bit = mode;
 }
 
 //if set, the gamepad report is not automatically sent after an update of axes/buttons; use send_now to update
-void Joystick_::useManualSend(bool mode)
+void Gamepad_::useManualSend(bool mode)
 {
 	_autosend = !mode;
 }
@@ -63,7 +63,7 @@ void Joystick_::useManualSend(bool mode)
  * Depending on the setting via use8bit(), either values from 0-1023 or -127 - 127
  * are mapped.
  */
-int Joystick_::map8or10bit(int const value)
+int Gamepad_::map8or10bit(int const value)
 {
 	if(_use8bit)
 	{
@@ -77,15 +77,15 @@ int Joystick_::map8or10bit(int const value)
 	}
 }
 
-void Joystick_::begin(void) 
+void Gamepad_::begin(void) 
 {
 }
 
-void Joystick_::end(void) 
+void Gamepad_::end(void) 
 {
 }
 
-void Joystick_::button(uint8_t button, bool val)
+void Gamepad_::button(uint8_t button, bool val)
 {
 	//I've no idea why, but without a second dword, it is not possible.
 	//maybe something with the alignment when using bit set/clear?!?
@@ -103,50 +103,50 @@ void Joystick_::button(uint8_t button, bool val)
 	}
 }
 
-void Joystick_::setButton(uint8_t btn, bool val)
+void Gamepad_::setButton(uint8_t btn, bool val)
 {
   //simply call button, but we setButton uses 0-31; button 1-32
   button(btn+1, val);
 }
 
-void Joystick_::X(int val)
+void Gamepad_::X(int val)
 {
 	data.x = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Joystick_::Y(int val)
+void Gamepad_::Y(int val)
 {
 	data.y = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Joystick_::Z(int val)
+void Gamepad_::Z(int val)
 {
 	data.z = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Joystick_::Zrotate(int val)
+void Gamepad_::Zrotate(int val)
 {
 	data.rz = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Joystick_::sliderLeft(int val)
+void Gamepad_::sliderLeft(int val)
 {
 	data.rx = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Joystick_::sliderRight(int val)
+void Gamepad_::sliderRight(int val)
 {
 	data.ry = map8or10bit(val);
 	if(_autosend) send_now();
 }
 
-void Joystick_::slider(int val)
+void Gamepad_::slider(int val)
 {
 	data.rx = map8or10bit(val);
 	if(_autosend) send_now();
 }
 
-void Joystick_::position(int X, int Y)
+void Gamepad_::position(int X, int Y)
 {
 	data.x = map8or10bit(X);
 	data.y = map8or10bit(Y);
@@ -154,35 +154,35 @@ void Joystick_::position(int X, int Y)
 }
 
 //compatibility: there is only one hat implemented, num parameter is ignored
-void Joystick_::hat(unsigned int num, int angle)
+void Gamepad_::hat(unsigned int num, int angle)
 {
 	(void) num;
 	hat(angle);
 }
   
 //set the hat value, from 0-360. -1 is rest position
-void Joystick_::hat(int angle)
+void Gamepad_::hat(int angle)
 {
 	if(angle < 0) data.hat = 0;
 	if(angle >= 0 && angle <= 360) data.hat = map(angle,0,360,1,8);
 	if(_autosend) send_now();
 }
 
-//send back the Joystick report
-void Joystick_::getReport(hid_gamepad_report_t *report)
+//send back the Gamepad report
+void Gamepad_::getReport(hid_gamepad_report_t *report)
 {
   memcpy(report,&data,sizeof(data));
 }
   
 //immediately send an HID report
-void Joystick_::send_now(void)
+void Gamepad_::send_now(void)
 {
 	CoreMutex m(&__usb_mutex);
     tud_task();
     if (tud_hid_ready()) {
-		tud_hid_n_report(0, __USBGetJoystickReportID(), &data, sizeof(data));
+		tud_hid_n_report(0, __USBGetGamepadReportID(), &data, sizeof(data));
     }
     tud_task();
 }
 
-Joystick_ Joystick;
+Gamepad_ Gamepad;
