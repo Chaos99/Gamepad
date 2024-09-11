@@ -24,6 +24,52 @@
 #include <Arduino.h>
 #include "class/hid/hid.h"
 
+// using structs instead of enum classes to allow implicit int conversion
+// and aliases
+
+struct Dpad {
+  static const uint8_t RELEASE = 0;
+  static const uint8_t UP = 1;
+  static const uint8_t UPPERRIGHT = 2;
+  static const uint8_t RIGHT = 3;
+  static const uint8_t LOWERRIGHT = 4;
+  static const uint8_t DOWN = 5;
+  static const uint8_t LOWERLEFT = 6;
+  static const uint8_t LEFT = 7;
+  static const uint8_t UPPERLEFT = 8;
+};
+
+struct Gamepad_Button {
+  static const uint8_t A       = 0;
+  static const uint8_t SOUTH   = 0;
+  static const uint8_t CROSS   = 0;
+
+  static const uint8_t B       = 1;
+  static const uint8_t EAST    = 1;
+  static const uint8_t CIRCLE   = 1;
+
+  static const uint8_t C       = 2;
+
+  static const uint8_t X       = 3;
+  static const uint8_t NORTH   = 3;
+  static const uint8_t TRIANGLE= 3;
+
+  static const uint8_t Y       = 4;
+  static const uint8_t WEST    = 4;
+  static const uint8_t SQUARE  = 4;
+
+  static const uint8_t Z       = 5;
+  static const uint8_t TL      = 6;
+  static const uint8_t TR      = 7;
+  static const uint8_t TL2     = 8;
+  static const uint8_t TR2     = 9;
+  static const uint8_t SELECT  = 10;
+  static const uint8_t START   = 11;
+  static const uint8_t MODE    = 12;
+  static const uint8_t THUMBL  = 13;
+  static const uint8_t THUMBR  = 14;
+};
+
 //======================================================================
 class Gamepad_
 {
@@ -42,21 +88,18 @@ public:
   //same call as button, but "button" starts with 0
   void setButton(uint8_t btn, bool val);
   //set axis values
-  void X(int val);
-  void Y(int val);
-  void position(int X, int Y);
-  void Z(int val);
-  void Zrotate(int val);
-  void sliderLeft(int val);
-  void sliderRight(int val);
-  //note: not implemented in TinyUSB gamepad, is mapped to sliderLeft.
-  void slider(int val);
+  void LX(int val);
+  void LY(int val);
+  void RX(int val);
+  void RY(int val);
+  void positionL(int X, int Y);
+  void positionR(int X, int Y);
+  void triggerLeft(int val);
+  void triggerRight(int val);
+
   
-  //set the hat value, from 0-360. -1 is rest position
-  void hat(int angle);
-  //compatibility: there is only one hat implemented, num parameter is ignored
-  void hat(unsigned int num, int angle);
-  
+  //dapd translates 8 directions into 1 or 2 simultanious button presses out of 4 buttons
+  void dpad(int8_t direction);  
   
   //if set, the gamepad report is not automatically sent after an update of axes/buttons; use send_now to update
   void useManualSend(bool mode);

@@ -40,7 +40,7 @@ Gamepad_::Gamepad_(void)
     _use8bit = false;
     _autosend = true;
     memset(&data,0,sizeof(data));
-	//_X_axis = _Y_axis = _Z_axis = _Zrotate = _sliderLeft = _sliderRight = _hat = data.buttons = 0;
+	//_X_axis = _Y_axis = _Z_axis = _Zrotate = _triggerLeft = _triggerRight = _dpad = data.buttons = 0;
 }
 
 /** define the mapping of axes values
@@ -109,62 +109,74 @@ void Gamepad_::setButton(uint8_t btn, bool val)
   button(btn+1, val);
 }
 
-void Gamepad_::X(int val)
+void Gamepad_::LX(int val)
 {
 	data.x = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Gamepad_::Y(int val)
+void Gamepad_::LY(int val)
 {
 	data.y = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Gamepad_::Z(int val)
+void Gamepad_::RX(int val)
 {
-	data.z = map8or10bit(val);
+	data.x = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Gamepad_::Zrotate(int val)
+void Gamepad_::RY(int val)
 {
-	data.rz = map8or10bit(val);
+	data.y = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Gamepad_::sliderLeft(int val)
+void Gamepad_::triggerLeft(int val)
 {
 	data.rx = map8or10bit(val);
 	if(_autosend) send_now();
 }
-void Gamepad_::sliderRight(int val)
+void Gamepad_::triggerRight(int val)
 {
 	data.ry = map8or10bit(val);
 	if(_autosend) send_now();
 }
-
-void Gamepad_::slider(int val)
-{
-	data.rx = map8or10bit(val);
-	if(_autosend) send_now();
-}
-
-void Gamepad_::position(int X, int Y)
+void Gamepad_::positionL(int X, int Y)
 {
 	data.x = map8or10bit(X);
 	data.y = map8or10bit(Y);
 	if(_autosend) send_now();
 }
 
-//compatibility: there is only one hat implemented, num parameter is ignored
-void Gamepad_::hat(unsigned int num, int angle)
+void Gamepad_::positionR(int X, int Y)
 {
-	(void) num;
-	hat(angle);
+	data.z = map8or10bit(X);
+	data.rz = map8or10bit(Y);
+	if(_autosend) send_now();
 }
-  
-//set the hat value, from 0-360. -1 is rest position
-void Gamepad_::hat(int angle)
+
+//set the dpad value, from 0-360. -1 is rest position
+void Gamepad_::dpad(int8_t direction)
 {
-	if(angle < 0) data.hat = 0;
-	if(angle >= 0 && angle <= 360) data.hat = map(angle,0,360,1,8);
+	switch (direction)
+	{
+		case 0: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_CENTERED;
+		break;
+		case 1: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_UP;
+		break;
+		case 2: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_UP_RIGHT;
+		break;
+		case 3: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_RIGHT;
+		break;
+		case 4: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_DOWN_RIGHT;
+		break;
+		case 5: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_DOWN;
+		break;
+		case 6: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_DOWN_LEFT;
+		break;
+		case 7: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_LEFT;
+		break;
+		case 8: data.hat = hid_gamepad_hat_t::GAMEPAD_HAT_UP_LEFT;
+		break;
+	}
 	if(_autosend) send_now();
 }
 
